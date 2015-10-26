@@ -10,4 +10,4 @@ if __name__ == '__main__':
     training_data, validation_data, test_data = \
         mnist_loader_with_pickle.load_data_wrapper()
     net = network.Network([784, 30, 10])
-    net.SGD(training_data, 30, 10, 0.01, test_data=test_data)
+    net.SGD(training_data, 30, 10, 3.0, test_data=test_data)
