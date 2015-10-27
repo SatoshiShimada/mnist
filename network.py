@@ -1,6 +1,7 @@
 
 import random
 import numpy as np
+import matplotlib.pyplot as plt
 
 class Network():
     def __init__(self, sizes):
@@ -15,6 +16,10 @@ class Network():
         return a
 
     def SGD(self, training_data, epochs, mini_batch_size, eta, test_data=None):
+        # lilmit 10 data
+        test_dd = test_data
+        test_data = test_data[:10]
+        # ------------------
         if test_data: n_test = len(test_data)
         n = len(training_data)
         for j in xrange(epochs):
@@ -24,8 +29,12 @@ class Network():
                     for k in xrange(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
+            # --------------
+            random.shuffle(test_dd)
+            test_data = test_dd[:10]
             if test_data:
-                print( "Epoch {0}: {1} / {2}".format(j, self.evaluate(test_data), n_test))
+                self.evaluate(test_data)
+                #print( "Epoch {0}: {1} / {2}".format(j, self.evaluate(test_data), n_test))
             else:
                 print("Epoch {0} complete".format(j))
 
@@ -68,9 +77,20 @@ class Network():
         return (nabla_b, nabla_w)
 
     def evaluate(self, test_data):
-        test_results = [(np.argmax(self.feedforward(x)), y)
-                for (x, y) in test_data]
-        return sum(int(x == y) for (x, y) in test_results)
+        #test_results = [(np.argmax(self.feedforward(x)), y)
+        #       for (x, y) in test_data]
+        #return sum(int(x == y) for (x, y) in test_results)
+        for (x, y) in test_data:
+            result = np.argmax(self.feedforward(x))
+            print "result: " + str(result) + " label: " + str(y),
+            if result == y:
+                print " OK"
+            else:
+                print "*bad*"
+            x = x.reshape((28, 28))
+            plt.imshow(x)
+            plt.gray()
+            plt.show()
 
     def cost_derivative(self, output_activations, y):
         return (output_activations-y)
