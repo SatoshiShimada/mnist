@@ -16,10 +16,6 @@ class Network():
         return a
 
     def SGD(self, training_data, epochs, mini_batch_size, eta, test_data=None):
-        # lilmit 10 data
-        test_dd = test_data
-        test_data = test_data[:10]
-        # ------------------
         if test_data: n_test = len(test_data)
         n = len(training_data)
         for j in xrange(epochs):
@@ -29,14 +25,12 @@ class Network():
                     for k in xrange(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
-            # --------------
-            random.shuffle(test_dd)
-            test_data = test_dd[:10]
+            self.save_data()
+            self.load_data()
             if test_data:
-                self.evaluate(test_data)
-                #print( "Epoch {0}: {1} / {2}".format(j, self.evaluate(test_data), n_test))
-            else:
-                print("Epoch {0} complete".format(j))
+                print( "Epoch {0}: {1} / {2}".format(j, self.evaluate(test_data), n_test))
+            #else:
+            #    print("Epoch {0} complete".format(j))
 
     def update_mini_batch(self, mini_batch, eta):
         nabla_b = [np.zeros(b.shape) for b in self.biases]
@@ -81,19 +75,34 @@ class Network():
         #       for (x, y) in test_data]
         #return sum(int(x == y) for (x, y) in test_results)
         for (x, y) in test_data:
-            result = np.argmax(self.feedforward(x))
-            print "result: " + str(result) + " label: " + str(y),
-            if result == y:
-                print " OK"
-            else:
-                print "*bad*"
-            x = x.reshape((28, 28))
-            plt.imshow(x)
+            print "label: " + str(y),
+            x = x.reshape((784, 1))
+            a = np.argmax(self.feedforward(x))
+            print "result: " + str(a)
+            plt.imshow(x.reshape((28, 28)))
             plt.gray()
             plt.show()
 
     def cost_derivative(self, output_activations, y):
         return (output_activations-y)
+
+    def save_data(self):
+        #np.save('biases.npy', self.biases)
+        #np.save('weights.npy', self.weights)
+        np.savetxt('biases1.csv', self.biases[0], delimiter=',')
+        np.savetxt('weights1.csv', self.weights[0], delimiter=',')
+        np.savetxt('biases2.csv', self.biases[1], delimiter=',')
+        np.savetxt('weights2.csv', self.weights[1], delimiter=',')
+
+    def load_data(self):
+        #self.biases = np.load('biases.npy')
+        #self.weights = np.load('weights.npy')
+        self.biases[0] = np.loadtxt('biases1.csv', delimiter=',')
+        self.biases[0] = self.biases[0].reshape((30, 1))
+        self.weights[0] = np.loadtxt('weights1.csv', delimiter=',')
+        self.biases[1] = np.loadtxt('biases2.csv', delimiter=',')
+        self.biases[1] = self.biases[1].reshape((10, 1))
+        self.weights[1] = np.loadtxt('weights2.csv', delimiter=',')
 
 def sigmoid(z):
     return 1.0/(1.0+np.exp(-z))
