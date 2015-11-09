@@ -13,16 +13,26 @@ if __name__ == '__main__':
     ## read mnist data
     training_data, validation_data, test_data = \
         mnist_loader_with_pickle.load_data_wrapper()
+    ## load training data of ball from image
     ball_data = read.load_ball()
     training_data = training_data + ball_data
-    ## create network
-    ## input  layer: 784 (28 * 28)
-    ## hidden layer: 30 * 1
-    ## output layer: 11 (digits and ball)
+
+    ###########################################
+    ## create network                        ##
+    ## input  layer: 784 (28 * 28)           ##
+    ## hidden layer: 30 * 1                  ##
+    ## output layer: 11 (digits and ball)    ##
+    ###########################################
     net = network.Network([784, 30, 11])
 
     ## execute training
-    net.SGD(training_data, 30, 10, 3.0, test_data=test_data)
+    #net.SGD(training_data, 30, 10, 3.0, test_data=test_data)
 
     #net.save_data()
     #net.evaluate(test_data)
+    net.load_data()
+    data = read.load_image(sys.argv[1], 0)
+    ret = net.evaluate_data(data)
+
+    print "Result: [%2d] (%f)" % (ret[0], ret[1])
+

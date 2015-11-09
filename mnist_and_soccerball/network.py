@@ -73,6 +73,13 @@ class Network():
                for (x, y) in test_data]
         return sum(int(x == y) for (x, y) in test_results)
 
+    def evaluate_data(self, test_data):
+        data = test_data[0].reshape((784, 1))
+        result = self.feedforward(data)
+        index  = np.argmax(result)
+        value  = result[index]
+        return (index, value)
+
     def cost_derivative(self, output_activations, y):
         return (output_activations-y)
 
@@ -85,12 +92,13 @@ class Network():
         np.savetxt(path + 'weights2.csv', self.weights[1], delimiter=',')
 
     def load_data(self):
-        self.biases[0] = np.loadtxt('biases1.csv', delimiter=',')
-        self.biases[0] = self.biases[0].reshape((30, 1))
-        self.weights[0] = np.loadtxt('weights1.csv', delimiter=',')
-        self.biases[1] = np.loadtxt('biases2.csv', delimiter=',')
-        self.biases[1] = self.biases[1].reshape((10, 1))
-        self.weights[1] = np.loadtxt('weights2.csv', delimiter=',')
+        path = 'parameters/with_ball/'
+        self.biases[0] = np.loadtxt(path + 'biases1.csv', delimiter=',')
+        self.biases[0] = self.biases[0].reshape((self.sizes[1], 1))
+        self.weights[0] = np.loadtxt(path + 'weights1.csv', delimiter=',')
+        self.biases[1] = np.loadtxt(path + 'biases2.csv', delimiter=',')
+        self.biases[1] = self.biases[1].reshape((self.sizes[2], 1))
+        self.weights[1] = np.loadtxt(path + 'weights2.csv', delimiter=',')
 
 def sigmoid(z):
     return 1.0/(1.0+np.exp(-z))
