@@ -2,14 +2,13 @@
 # coding: utf-8
 
 # import library
-import sys
 import numpy as np
 # import my library
 import network
 import mnist_loader_with_pickle
 import read
 
-if __name__ == '__main__':
+def evaluate_from_file(filename):
     ## read mnist data
     training_data, validation_data, test_data = \
         mnist_loader_with_pickle.load_data_wrapper()
@@ -31,8 +30,12 @@ if __name__ == '__main__':
     #net.save_data()
     #net.evaluate(test_data)
     net.load_data()
-    data = read.load_image(sys.argv[1], 0)
+    data = read.load_image_rgb(filename, 0)
     ret = net.evaluate_data(data)
 
-    print "Result: [%2d] (%f)" % (ret[0], ret[1])
+    return ret
 
+if __name__ == '__main__':
+    import sys
+    ret = evaluate_from_file(sys.argv[1])
+    print "%d,%f" % (ret[0], ret[1])

@@ -59,7 +59,9 @@ void Interface::loadImage(QString image_filename)
 	if(image_buf.isNull()) {
 		return;
 	}
-	image->setPixmap(QPixmap::fromImage(image_buf));
+	QPixmap map = QPixmap::fromImage(image_buf);
+	map = map.scaled(280, 280);
+	image->setPixmap(map);
 }
 
 void Interface::loadImage(const char *image_filename)
@@ -100,7 +102,11 @@ void Interface::dropEvent(QDropEvent *e)
 		dimension[j++] = buf[i];
 	}
 	strcpy(value, buf + j);
-	resultLine->setText(dimension);
+	if(!strcmp(dimension, "10")) {
+		resultLine->setText("Ball");
+	} else {
+		resultLine->setText(dimension);
+	}
 	valueLine->setText(value);
 }
 

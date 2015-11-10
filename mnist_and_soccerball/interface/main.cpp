@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 {
 	QApplication app(argc, argv);
 	Interface *interface = new Interface;
-	//interface->resize(300, 300)
+	interface->resize(600, 350);
 
 	interface->show();
 	return app.exec();
