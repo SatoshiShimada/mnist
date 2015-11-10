@@ -84,8 +84,7 @@ void Interface::dragEnterEvent(QDragEnterEvent *e)
 void Interface::dropEvent(QDropEvent *e)
 {
 	filenameDrag = e->mimeData()->urls().first().toLocalFile();
-	titleLabel->setText(e->mimeData()->urls().first().toLocalFile());
-	filenameLine->setText(e->mimeData()->urls().first().toLocalFile());
+	filenameLine->setText(filenameDrag);
 	loadImage(filenameDrag);
 	
 	/* save image filename to file */
