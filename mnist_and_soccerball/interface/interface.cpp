@@ -1,16 +1,10 @@
 
 #include <QtGui>
 #include "interface.h"
+#include <iostream>
+#include <string.h>
 
-int main(int argc, char **argv)
-{
-	QApplication app(argc, argv);
-	Interface *interface = new Interface;
-	//interface->resize(300, 300)
-
-	interface->show();
-	return app.exec();
-}
+void callPython(std::string, char *);
 
 Interface::Interface()
 {
@@ -40,7 +34,6 @@ void Interface::createWindow(void)
 
 	resultLine->setReadOnly(true);
 	valueLine->setReadOnly(true);
-	//resultLine->setText("2");
 
 	labelLayout->addWidget(filenameLabel);
 	labelLayout->addWidget(resultLabel);
@@ -90,7 +83,24 @@ void Interface::dropEvent(QDropEvent *e)
 {
 	filenameDrag = e->mimeData()->urls().first().toLocalFile();
 	titleLabel->setText(e->mimeData()->urls().first().toLocalFile());
-	//loadImage("../ball_image/ball_0001.png");
+	filenameLine->setText(e->mimeData()->urls().first().toLocalFile());
 	loadImage(filenameDrag);
+	
+	/* save image filename to file */
+	char buf[1024];
+	callPython(filenameDrag.toStdString(), buf);
+	char dimension[1024], value[1024];
+
+	int j = 0;
+	for(int i = 0; buf[i] != '\0'; i++) {
+		if(buf[i] == ',') {
+			dimension[j++] = '\0';
+			break;
+		}
+		dimension[j++] = buf[i];
+	}
+	strcpy(value, buf + j);
+	resultLine->setText(dimension);
+	valueLine->setText(value);
 }
 

@@ -15,6 +15,8 @@
 #include <QMimeData>
 #include <QString>
 
+#define IMAGE_FILE_NAME "image_file.txt"
+
 class Interface : public QMainWindow
 {
 	Q_OBJECT
