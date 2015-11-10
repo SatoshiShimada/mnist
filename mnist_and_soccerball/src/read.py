@@ -30,7 +30,7 @@ def load_image(filename, label):
 
 def load_ball():
     ball_data = []
-    for n in xrange(1260):
+    for n in (range(1260) + range(2000, 3260)):
         filename = 'ball_image/ball_' + "%04d" % (n + 1) + '.png'
         ret = load_image(filename, 10)
         ret = (ret[0].reshape((784, 1)), ret[1])

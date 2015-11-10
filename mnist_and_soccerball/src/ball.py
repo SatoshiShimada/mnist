@@ -26,9 +26,9 @@ def evaluate_from_file(filename):
 
     ## execute training
     #net.SGD(training_data, 30, 10, 3.0, test_data=test_data)
-
     #net.save_data()
     #net.evaluate(test_data)
+
     net.load_data()
     data = read.load_image_rgb(filename, 0)
     ret = net.evaluate_data(data)
@@ -39,3 +39,4 @@ if __name__ == '__main__':
     import sys
     ret = evaluate_from_file(sys.argv[1])
     print "%d,%f" % (ret[0], ret[1])
+
