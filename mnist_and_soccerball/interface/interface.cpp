@@ -57,6 +57,7 @@ void Interface::loadImage(QString image_filename)
 {
 	QImage image_buf(image_filename);
 	if(image_buf.isNull()) {
+		std::cerr << "Error: can\'t open image file" << std::endl;
 		return;
 	}
 	QPixmap map = QPixmap::fromImage(image_buf);
@@ -68,8 +69,11 @@ void Interface::loadImage(const char *image_filename)
 {
 	QImage image_buf(image_filename);
 	if(image_buf.isNull()) {
+		std::cerr << "Error: can\'t open image file" << std::endl;
 		return;
 	}
+	QPixmap map = QPixmap::fromImage(image_buf);
+	map = map.scaled(280, 280);
 	image->setPixmap(QPixmap::fromImage(image_buf));
 }
 
@@ -92,6 +96,7 @@ void Interface::dropEvent(QDropEvent *e)
 	callPython(filenameDrag.toStdString(), buf);
 	char dimension[1024], value[1024];
 
+	/* split result to dimension and value */
 	int j = 0;
 	for(int i = 0; buf[i] != '\0'; i++) {
 		if(buf[i] == ',') {
@@ -101,6 +106,7 @@ void Interface::dropEvent(QDropEvent *e)
 		dimension[j++] = buf[i];
 	}
 	strcpy(value, buf + j);
+
 	if(!strcmp(dimension, "10")) {
 		resultLine->setText("Ball");
 	} else {

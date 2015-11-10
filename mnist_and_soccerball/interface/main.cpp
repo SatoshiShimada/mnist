@@ -12,6 +12,7 @@ int main(int argc, char **argv)
 {
 	QApplication app(argc, argv);
 	Interface *interface = new Interface;
+	/* set window size */
 	interface->resize(600, 350);
 
 	interface->show();
@@ -28,9 +29,11 @@ void callPython(std::string filename, char *ret)
 	char command[1024];
 	char buf[1024];
 
+	/* execute 'src/ball.py' with argument that is filename of image */
 	strcpy(command, "src/ball.py ");
 	strcat(command, name);
 	fp = popen(command, "r");
+	/* get string of output of 'src/ball.py' */
 	fgets(buf, sizeof(buf), fp);
 	pclose(fp);
 
