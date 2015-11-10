@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <QtGui>
 #include <QtCore>
 #include <QApplication>
@@ -12,6 +13,7 @@
 #include <QDrag>
 #include <QUrl>
 #include <QMimeData>
+#include <QString>
 
 class Interface : public QMainWindow
 {
@@ -29,12 +31,14 @@ private:
 	QHBoxLayout *winLayout;
 	QLineEdit *filenameLine;
 	QLineEdit *resultLine, *valueLine;
+	QString filenameDrag;
 
 public:
 	Interface();
 	~Interface();
 	void createWindow(void);
-	void loadImage(char *);
-	//void dragEnterEvent(QDragEnterEvent *e);
-	//void dropEvent(QDropEvent *e);
+	void loadImage(const char *);
+	void loadImage(QString);
+	void dragEnterEvent(QDragEnterEvent *e);
+	void dropEvent(QDropEvent *e);
 };

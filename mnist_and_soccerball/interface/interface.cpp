@@ -16,7 +16,6 @@ Interface::Interface()
 {
 	setAcceptDrops(true);
 	createWindow();
-	loadImage("../ball_image/ball_0001.png");
 }
 
 Interface::~Interface()
@@ -58,11 +57,10 @@ void Interface::createWindow(void)
 	mainLayout->addLayout(winLayout);
 
 	window->setLayout(mainLayout);
-	//window->show();
 	setCentralWidget(window);
 }
 
-void Interface::loadImage(char *image_filename)
+void Interface::loadImage(QString image_filename)
 {
 	QImage image_buf(image_filename);
 	if(image_buf.isNull()) {
@@ -71,7 +69,15 @@ void Interface::loadImage(char *image_filename)
 	image->setPixmap(QPixmap::fromImage(image_buf));
 }
 
-#if 0
+void Interface::loadImage(const char *image_filename)
+{
+	QImage image_buf(image_filename);
+	if(image_buf.isNull()) {
+		return;
+	}
+	image->setPixmap(QPixmap::fromImage(image_buf));
+}
+
 void Interface::dragEnterEvent(QDragEnterEvent *e)
 {
 	if(e->mimeData()->hasFormat("text/uri-list"))
@@ -82,7 +88,9 @@ void Interface::dragEnterEvent(QDragEnterEvent *e)
 
 void Interface::dropEvent(QDropEvent *e)
 {
-	//this.input_string = e->mimeData()->urls().first().toLocalFile();
+	filenameDrag = e->mimeData()->urls().first().toLocalFile();
 	titleLabel->setText(e->mimeData()->urls().first().toLocalFile());
+	//loadImage("../ball_image/ball_0001.png");
+	loadImage(filenameDrag);
 }
-#endif
+
