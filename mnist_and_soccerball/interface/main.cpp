@@ -28,7 +28,7 @@ void callPython(std::string filename, char *ret)
 	char command[1024];
 	char buf[1024];
 
-	strcpy(command, "./ball.py ");
+	strcpy(command, "src/ball.py ");
 	strcat(command, name);
 	fp = popen(command, "r");
 	fgets(buf, sizeof(buf), fp);
