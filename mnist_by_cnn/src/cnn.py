@@ -11,6 +11,8 @@ filter_size = 4
 filter_count = 2
 filter_channels = 1 # Gray scale image
 w = np.random.randn(filter_count, filter_channels, filter_size, filter_size)
+## create biases
+biases = np.random.randn(filter_count, 1)
 
 ## load mnist data
 training_data, validation_data, test_data = \
@@ -38,6 +40,7 @@ feature_maps = np.array(filtered_data)
 
 ## Pooling
 ## Max-pooling
+## Window size: 2x2
 fmap_buf = []
 for data in feature_maps:
     fmap_out = []
@@ -57,4 +60,10 @@ for data in feature_maps:
     fmap_buf.append(fmap_out)
 feature_maps = np.array(fmap_buf)
 #np.savetxt('../parameter/out2.csv', feature_maps, delimiter=',')
+
+## Added Biases
+#output = feature_maps + biases (!!miss!! not list addition)
+
+## Activation function
+# sigmoid, tanh, ReLU
 
