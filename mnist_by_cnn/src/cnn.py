@@ -34,13 +34,27 @@ for filters in w:
 
 ## feature maps (filter_count)
 feature_maps = np.array(filtered_data)
-#np.savetxt('out.csv', feature_maps, delimiter=',')
+#np.savetxt('../parameter/out1.csv', feature_maps, delimiter=',')
 
 ## Pooling
 ## Max-pooling
+fmap_buf = []
 for data in feature_maps:
+    fmap_out = []
     fmap = data.reshape((fmapsize_width, fmapsize_height))
-    for y in xrange(fmapsize_height):
-        buf = fmap[y:y+1]
-        for x in xrange(fmapsize_width):
-            print buf[x:x+1]
+    for y in xrange(fmapsize_height / 2):
+        y *= 2
+        buf1, buf2 = fmap[y:y+2]
+        buf = []
+        count = 0
+        for a in zip(buf1, buf2):
+            buf.append(a[0])
+            buf.append(a[1])
+            if (count % 2) == 1:
+                fmap_out.append(max(buf))
+                buf = []
+            count += 1
+    fmap_buf.append(fmap_out)
+feature_maps = np.array(fmap_buf)
+#np.savetxt('../parameter/out2.csv', feature_maps, delimiter=',')
+
