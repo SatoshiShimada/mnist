@@ -4,11 +4,15 @@
 import numpy as np
 import mnist_loader_with_pickle
 
+import network
+
+parameter_output = True
+
 ## Convolution
 
 ## create filter as random value
 filter_size = 4
-filter_count = 2
+filter_count = 20
 filter_channels = 1 # Gray scale image
 w = np.random.randn(filter_count, filter_channels, filter_size, filter_size)
 ## create biases
@@ -36,7 +40,8 @@ for filters in w:
 
 ## feature maps (filter_count)
 feature_maps = np.array(filtered_data)
-#np.savetxt('../parameter/out1.csv', feature_maps, delimiter=',')
+if parameter_output == True:
+    np.savetxt('../parameter/out1.csv', feature_maps, delimiter=',')
 
 ## Pooling
 ## Max-pooling
@@ -59,11 +64,25 @@ for data in feature_maps:
             count += 1
     fmap_buf.append(fmap_out)
 feature_maps = np.array(fmap_buf)
-#np.savetxt('../parameter/out2.csv', feature_maps, delimiter=',')
+if parameter_output == True:
+    np.savetxt('../parameter/out2.csv', feature_maps, delimiter=',')
 
 ## Added Biases
 #output = feature_maps + biases (!!miss!! not list addition)
+fmap_buf = []
+for f, a in zip(feature_maps, biases):
+    buf = []
+    [ buf.append(x + a) for x in f]
+    fmap_buf.append(buf)
+feature_maps = np.array(fmap_buf)
+if parameter_output == True:
+    np.savetxt('../parameter/out3.csv', feature_maps, delimiter=',')
 
 ## Activation function
 # sigmoid, tanh, ReLU
+result = []
+[result.append(network.sigmoid_vec(x)) for x in feature_maps]
+feature_maps = np.array(result)
+if parameter_output == True:
+    np.savetxt('../parameter/out4.csv', feature_maps, delimiter=',')
 
