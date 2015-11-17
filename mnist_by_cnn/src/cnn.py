@@ -53,6 +53,9 @@ class CNN():
             if self.parameter_output == True:
                 np.savetxt('../parameter/out1.csv', feature_maps, delimiter=',')
 
+#####################################################################
+# TODO: sepalate convolution, pooling, biases and activation function
+#####################################################################
             ## Pooling
             ## Max-pooling
             ## Window size: 2x2
@@ -81,7 +84,7 @@ class CNN():
             fmap_buf = []
             for f, a in zip(feature_maps, self.biases):
                 buf = []
-                [ buf.append(x + a) for x in f]
+                [buf.append(x + a) for x in f]
                 fmap_buf.append(buf)
             feature_maps = np.array(fmap_buf)
             if self.parameter_output == True:
