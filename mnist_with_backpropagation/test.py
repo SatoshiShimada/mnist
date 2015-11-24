@@ -3,7 +3,8 @@
 
 import numpy as np
 
-import network
+#import network
+import fix_network as network
 
 class Logic():
     logic_and = [[np.array([0,0]), np.array([0])], [np.array([0,1]), np.array([0])], [np.array([1,0]) ,np.array([0])], [np.array([1,1]), np.array([1])]]
@@ -34,8 +35,10 @@ if __name__ == '__main__':
         test_data  = logic_or_test
 
         net = network.Network([2,3,1])
-        net.train(train_data, epoch=300, mini_batch_size=1, learning_rate=0.5)
-        #net.load_parameter()
+        if True:
+            net.train(train_data, epoch=300, mini_batch_size=2, learning_rate=0.5)
+            #net.save_parameter()
+        else:
+            net.load_parameter()
         net.feed_forward(test_data)
-        #net.save_parameter()
 
