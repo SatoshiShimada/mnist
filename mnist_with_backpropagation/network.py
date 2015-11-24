@@ -31,7 +31,7 @@ class Network():
             ## split traing sample for mini_batches
             mini_batch = [training_data[x:x + mini_batch_size] for x in xrange(0, len(training_data), mini_batch_size)]
             for m in mini_batch:
-                self.update_mini_batch(m, learning_rate)
+                self.update_mini_batch(m, learning_rate * (1.0 - count/epoch))
 
     def update_mini_batch(self, mini_batch, learning_rate):
         N = len(mini_batch)
@@ -100,4 +100,18 @@ class Network():
                 x = sigmoid_vec(np.dot(w, x) + b)
             print y,
             print x
+
+    def save_parameter(self):
+        path = "parameter/"
+        for i in xrange(len(self.w)):
+            np.savetxt(path + "weight%03d.csv" % i, self.w[i], delimiter=',')
+        for i in xrange(len(self.b)):
+            np.savetxt(path +"biases%03d.csv" % i, self.b[i], delimiter=',')
+
+    def load_parameter(self):
+        path = "parameter/"
+        for i in xrange(len(self.w)):
+            self.w[i] = np.loadtxt(path + "weight%03d.csv" % i, delimiter=',')
+        for i in xrange(len(self.b)):
+            self.b[i] = np.loadtxt(path + "biases%03d.csv" % i, delimiter=',')
 

@@ -16,12 +16,13 @@ class MNIST():
         self.training_data, self.validation_data, self.test_data = loader.load_data_wrapper()
 
 if __name__ == '__main__':
-    if True:
+    if False:
         mnist = MNIST()
         train_data = mnist.training_data
         test_data  = mnist.test_data
         net = network.Network([784, 30, 10])
         net.train(train_data, epoch=300, mini_batch_size=10, learning_rate=0.4)
+        net.save_parameter()
     else:
         data = Logic()
         ## create test data
@@ -34,5 +35,7 @@ if __name__ == '__main__':
 
         net = network.Network([2,3,1])
         net.train(train_data, epoch=300, mini_batch_size=1, learning_rate=0.5)
+        #net.load_parameter()
         net.feed_forward(test_data)
+        #net.save_parameter()
 
