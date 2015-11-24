@@ -46,10 +46,13 @@ class Network():
             for l, w, b in zip(xrange(1, self.layers), self.w, self.b):
                 u.append(np.dot(w, z[l - 1]) + np.dot(b, np.ones(self.layer[l])))
                 z.append(sigmoid_vec(u[l]))
-            D.append(desire)
-            Y.append(z[-1])
+            D.append(desire.ravel())
+            Y.append(z[-1].ravel())
             U.append(u)
             Z.append(z)
+
+        Y = np.array(Y)
+        D = np.array(D)
 
         Ubuf = []
         Zbuf = []

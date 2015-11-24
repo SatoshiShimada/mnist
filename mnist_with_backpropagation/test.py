@@ -21,7 +21,7 @@ if __name__ == '__main__':
         train_data = mnist.training_data
         test_data  = mnist.test_data
         net = network.Network([784, 30, 10])
-        net.train(train_data, epoch=300, mini_batch_size=30, learning_rate=0.4)
+        net.train(train_data, epoch=300, mini_batch_size=10, learning_rate=0.4)
     else:
         data = Logic()
         ## create test data
