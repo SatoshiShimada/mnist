@@ -31,12 +31,16 @@ if __name__ == '__main__':
         logic_or_test   = np.array(data.logic_or)
         logic_exor_test = np.array(data.logic_exor)
 
-        train_data = data.logic_or
-        test_data  = logic_or_test
+        #train_data = data.logic_or
+        #test_data  = logic_or_test
+        train_data = data.logic_and
+        test_data  = logic_and_test
+        #train_data = data.logic_exor
+        #test_data  = logic_exor_test
 
         net = network.Network([2,3,1])
         if True:
-            net.train(train_data, epoch=100, mini_batch_size=1, learning_rate=0.5)
+            net.train(train_data, epoch=200, mini_batch_size=1, learning_rate=0.5)
             #net.save_parameter()
         else:
             net.load_parameter()
