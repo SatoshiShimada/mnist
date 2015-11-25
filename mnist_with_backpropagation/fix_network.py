@@ -31,8 +31,7 @@ class Network():
             ## split traing sample for mini_batches
             mini_batch = [training_data[x:x + mini_batch_size] for x in xrange(0, len(training_data), mini_batch_size)]
             for m in mini_batch:
-                print "-------- batch -----------"
-                self.update_mini_batch(m, learning_rate * (1.0 - count/epoch))
+                self.update_mini_batch(m, learning_rate)
 
     def update_mini_batch(self, mini_batch, learning_rate):
         N = len(mini_batch)
@@ -66,70 +65,27 @@ class Network():
                 Ubuf[i].append(a)
                 Zbuf[i].append(b)
                 i += 1
-        U = Ubuf
-        Z = Zbuf
-
-        Ubuf = U
-        Zbuf = Z
         U = []
         Z = []
         for u, z in zip(Ubuf, Zbuf):
-            U.append(np.reshape(np.concatenate(u), (N, -1)))
-            Z.append(np.reshape(np.concatenate(z), (N, -1)))
-
-        ## debug
-        Debug = True
-        #Debug = False
+            U.append(np.reshape(np.concatenate(u), (N, -1)).transpose())
+            Z.append(np.reshape(np.concatenate(z), (N, -1)).transpose())
 
         ## Back propagation
+        ## calculate delta
         Delta = [0] * self.layers
-        print Delta
-        Delta[-1] = np.subtract(Y, D)
+        Delta[-1] = np.subtract(Y, D).transpose()
         for l in xrange(self.layers - 2, 0, -1):
-            print "layer [%d]" % l
-            #active = sigmoid_prime_vec(U[l - 1])
-            #buf = np.dot(self.w[l - 1].transpose(), Delta[l - 1])
-            #dlt = np.multiply(active, buf)
-            #Delta[l - 1] = dlt
-            print "############"
-            print self.w[l].transpose()
-            print Delta[l + 1]
-            print "############"
             active = sigmoid_vec(U[l])
             buf = np.dot(self.w[l].transpose(), Delta[l + 1])
             dlt = np.multiply(active, buf)
             Delta[l] = dlt
         
-        # debug
-        if Debug:
-            print "Delta"
-            for d in Delta:
-                print d
-            #import sys
-            #sys.exit(0)
-
         for l, w in zip(xrange(1, self.layers), self.w):
-            print "==== layer ===="
-            print "count [%d] layer" % l
-            print "Delta"
-            print Delta[l - 1]
-            print "Z"
-            #print Z[l - 1]
-            print Z[l].transpose()
-            dw = np.multiply(np.dot(Delta[l - 1], Z[l - 1]), Ninv)
-            db = np.multiply(np.dot(Delta[l - 1], np.ones(N)), Ninv)
+            dw = np.multiply(np.dot(Delta[l], Z[l - 1].transpose()), Ninv)
+            db = np.multiply(np.dot(Delta[l], np.ones(N)), Ninv)
             dw = dw * learning_rate * -1
             db = db * learning_rate * -1
-            if Debug:
-                print "@@@ weight and bias @@@"
-                print "dw"
-                print dw
-                print "self.w"
-                print self.w[l - 1]
-                print "db"
-                print db
-                print "self.b"
-                print self.b[l - 1]
             self.w[l - 1] += dw
             self.b[l - 1] += db
 

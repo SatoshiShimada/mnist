@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
         net = network.Network([2,3,1])
         if True:
-            net.train(train_data, epoch=300, mini_batch_size=2, learning_rate=0.5)
+            net.train(train_data, epoch=100, mini_batch_size=1, learning_rate=0.5)
             #net.save_parameter()
         else:
             net.load_parameter()
