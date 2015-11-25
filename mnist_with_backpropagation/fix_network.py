@@ -74,9 +74,9 @@ class Network():
         ## Back propagation
         ## calculate delta
         Delta = [0] * self.layers
-        Delta[-1] = np.subtract(Y, D).transpose()
+        Delta[-1] = np.subtract(D, Y).transpose()
         for l in xrange(self.layers - 2, 0, -1):
-            active = sigmoid_vec(U[l])
+            active = sigmoid_prime_vec(U[l])
             buf = np.dot(self.w[l].transpose(), Delta[l + 1])
             dlt = np.multiply(active, buf)
             Delta[l] = dlt
@@ -84,8 +84,8 @@ class Network():
         for l, w in zip(xrange(1, self.layers), self.w):
             dw = np.multiply(np.dot(Delta[l], Z[l - 1].transpose()), Ninv)
             db = np.multiply(np.dot(Delta[l], np.ones(N)), Ninv)
-            dw = dw * learning_rate * -1
-            db = db * learning_rate * -1
+            dw = dw * learning_rate * -1.0
+            db = db * learning_rate * -1.0
             self.w[l - 1] += dw
             self.b[l - 1] += db
 
