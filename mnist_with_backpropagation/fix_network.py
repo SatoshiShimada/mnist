@@ -85,7 +85,7 @@ class Network():
         Delta = [0] * self.layers
         #Delta[-1] = np.subtract(D, Y)
         Delta[-1] = np.subtract(Y, D)
-        #self.Errors.append(Delta[-1])
+        self.Errors.append(Delta[-1])
         for l in xrange(self.layers - 2, 0, -1):
             active = sigmoid_prime_vec(U[l])
             buf = np.dot(self.w[l].transpose(), Delta[l + 1])
@@ -100,12 +100,17 @@ class Network():
             self.b[l - 1] += db
 
     def feed_forward(self, data):
+        count = 0
         for x, y in data:
-            print x,
             for w, b in zip(self.w, self.b):
-                x = sigmoid_vec(np.dot(w, x) + b)
-            print y,
-            print x
+                x = sigmoid_vec(np.dot(w, x) + b.reshape((-1, 1)))
+            #print y,
+            #print ',',
+            #print np.argmax(x)
+            if y == np.argmax(x):
+                count += 1
+        print "Test done."
+        print "[ %d / %d ]" % (count, len(data))
 
     def save_parameter(self):
         path = "parameter/"

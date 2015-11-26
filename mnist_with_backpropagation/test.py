@@ -23,9 +23,15 @@ if __name__ == '__main__':
         mnist = MNIST()
         train_data = mnist.training_data
         test_data  = mnist.test_data
-        net = network.Network([784, 30, 10])
-        net.train(train_data, epoch=3, mini_batch_size=30, learning_rate=0.4)
-        net.save_parameter()
+        net = network.Network([784, 100, 10])
+
+        train_or_test = 'TEST'
+        if train_or_test == 'TRAIN':
+            net.train(train_data, epoch=30, mini_batch_size=10, learning_rate=3.0)
+            net.save_parameter()
+        elif train_or_test == 'TEST':
+            net.load_parameter()
+            net.feed_forward(test_data)
     else:
         data = Logic()
         ## create test data
