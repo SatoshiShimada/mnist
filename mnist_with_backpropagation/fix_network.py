@@ -24,10 +24,11 @@ class Network():
         self.Errors = []
 
     def __del__(self):
-        data = np.array(self.Errors).reshape((1, -1))
-        abs_vec = np.vectorize(lambda x: abs(x))
-        data = abs_vec(data)
-        np.savetxt('errors.csv', data, delimiter=',')
+        if self.Errors:
+            data = np.array(self.Errors).reshape((1, -1))
+            abs_vec = np.vectorize(lambda x: abs(x))
+            data = abs_vec(data)
+            np.savetxt('errors.csv', data, delimiter=',')
 
     def train(self, training_data, epoch=10, mini_batch_size=2, learning_rate=0.5):
         """
@@ -39,6 +40,7 @@ class Network():
             mini_batch = [training_data[x:x + mini_batch_size] for x in xrange(0, len(training_data), mini_batch_size)]
             for m in mini_batch:
                 self.update_mini_batch(m, learning_rate)
+            print "Epoch [%d] done." % count
 
     def update_mini_batch(self, mini_batch, learning_rate):
         N = len(mini_batch)
@@ -83,7 +85,7 @@ class Network():
         Delta = [0] * self.layers
         #Delta[-1] = np.subtract(D, Y)
         Delta[-1] = np.subtract(Y, D)
-        self.Errors.append(Delta[-1])
+        #self.Errors.append(Delta[-1])
         for l in xrange(self.layers - 2, 0, -1):
             active = sigmoid_prime_vec(U[l])
             buf = np.dot(self.w[l].transpose(), Delta[l + 1])
