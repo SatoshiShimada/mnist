@@ -27,7 +27,8 @@ class Network():
         training for network parameter with training data
         """
         for count in xrange(epoch):
-            mini_batches = np.random.shuffle(training_data)
+            #mini_batches = np.random.shuffle(training_data)
+            mini_batches = training_data
             ## split traing sample for mini_batches
             mini_batch = [training_data[x:x + mini_batch_size] for x in xrange(0, len(training_data), mini_batch_size)]
             for m in mini_batch:

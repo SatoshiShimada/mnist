@@ -21,6 +21,13 @@ class Network():
         self.layer = layers
         self.w = [np.random.randn(x, y) for x, y in zip(layers[1:], layers[:-1])]
         self.b = [np.random.randn(x) for x in layers[1:]]
+        self.Errors = []
+
+    def __del__(self):
+        data = np.array(self.Errors).reshape((1, -1))
+        abs_vec = np.vectorize(lambda x: abs(x))
+        data = abs_vec(data)
+        np.savetxt('errors.csv', data, delimiter=',')
 
     def train(self, training_data, epoch=10, mini_batch_size=2, learning_rate=0.5):
         """
@@ -51,8 +58,8 @@ class Network():
             U.append(u)
             Z.append(z)
 
-        Y = np.array(Y)
-        D = np.array(D)
+        Y = np.array(Y).transpose()
+        D = np.array(D).transpose()
 
         Ubuf = []
         Zbuf = []
@@ -74,16 +81,17 @@ class Network():
         ## Back propagation
         ## calculate delta
         Delta = [0] * self.layers
-        Delta[-1] = np.subtract(D, Y).transpose()
+        #Delta[-1] = np.subtract(D, Y)
+        Delta[-1] = np.subtract(Y, D)
+        self.Errors.append(Delta[-1])
         for l in xrange(self.layers - 2, 0, -1):
             active = sigmoid_prime_vec(U[l])
             buf = np.dot(self.w[l].transpose(), Delta[l + 1])
-            dlt = np.multiply(active, buf)
-            Delta[l] = dlt
+            Delta[l] = np.multiply(active, buf)
         
         for l, w in zip(xrange(1, self.layers), self.w):
-            dw = np.multiply(np.dot(Delta[l], Z[l - 1].transpose()), Ninv)
-            db = np.multiply(np.dot(Delta[l], np.ones(N)), Ninv)
+            dw = np.dot(Delta[l], Z[l - 1].transpose()) * Ninv
+            db = np.dot(Delta[l], np.ones(N)) * Ninv
             dw = dw * learning_rate * -1.0
             db = db * learning_rate * -1.0
             self.w[l - 1] += dw
@@ -102,7 +110,7 @@ class Network():
         for i in xrange(len(self.w)):
             np.savetxt(path + "weight%03d.csv" % i, self.w[i], delimiter=',')
         for i in xrange(len(self.b)):
-            np.savetxt(path +"biases%03d.csv" % i, self.b[i], delimiter=',')
+            np.savetxt(path + "biases%03d.csv" % i, self.b[i], delimiter=',')
 
     def load_parameter(self):
         path = "parameter/"

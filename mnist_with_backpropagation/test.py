@@ -31,10 +31,10 @@ if __name__ == '__main__':
         logic_or_test   = np.array(data.logic_or)
         logic_exor_test = np.array(data.logic_exor)
 
-        #train_data = data.logic_or
-        #test_data  = logic_or_test
-        train_data = data.logic_and
-        test_data  = logic_and_test
+        train_data = data.logic_or
+        test_data  = logic_or_test
+        #train_data = data.logic_and
+        #test_data  = logic_and_test
         #train_data = data.logic_exor
         #test_data  = logic_exor_test
 
