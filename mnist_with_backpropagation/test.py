@@ -3,8 +3,7 @@
 
 import numpy as np
 
-#import network
-import fix_network as network
+import network
 
 class Logic():
     logic_and = [[np.array([0,0]), np.array([0])], [np.array([0,1]), np.array([0])], [np.array([1,0]) ,np.array([0])], [np.array([1,1]), np.array([1])]]
@@ -17,7 +16,7 @@ class MNIST():
         self.training_data, self.validation_data, self.test_data = loader.load_data_wrapper()
 
 if __name__ == '__main__':
-    is_mnist = True
+    is_mnist = False
 
     if is_mnist:
         mnist = MNIST()
@@ -26,8 +25,9 @@ if __name__ == '__main__':
         net = network.Network([784, 100, 10])
 
         train_or_test = 'TEST'
+        #train_or_test = 'TRAIN'
         if train_or_test == 'TRAIN':
-            net.train(train_data, epoch=30, mini_batch_size=10, learning_rate=3.0)
+            net.train(train_data, epoch=10, mini_batch_size=10, learning_rate=3.0)
             net.save_parameter()
         elif train_or_test == 'TEST':
             net.load_parameter()
@@ -39,16 +39,16 @@ if __name__ == '__main__':
         logic_or_test   = np.array(data.logic_or)
         logic_exor_test = np.array(data.logic_exor)
 
-        train_data = data.logic_or
-        test_data  = logic_or_test
+        #train_data = data.logic_or
+        #test_data  = logic_or_test
         #train_data = data.logic_and
         #test_data  = logic_and_test
-        #train_data = data.logic_exor
-        #test_data  = logic_exor_test
+        train_data = data.logic_exor
+        test_data  = logic_exor_test
 
         net = network.Network([2,3,1])
         if True:
-            net.train(train_data, epoch=200, mini_batch_size=1, learning_rate=0.5)
+            net.train(train_data, epoch=300, mini_batch_size=1, learning_rate=0.5)
             #net.save_parameter()
         else:
             net.load_parameter()
