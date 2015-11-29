@@ -19,6 +19,7 @@ class MNIST():
 if __name__ == '__main__':
     is_mnist = True
 
+    ## MNIST dataset
     if is_mnist:
         mnist = MNIST()
         train_data = mnist.training_data
@@ -36,14 +37,15 @@ if __name__ == '__main__':
             net.load_parameter()
             net.feed_forward(test_data)
         else:
-            net.train(train_data, epoch=30, mini_batch_size=10, learning_rate=3.0)
-            net.feed_forward(test_data)
+            net.train(train_data[:1000], epoch=30, mini_batch_size=10, learning_rate=3.0, error_log=True)
+            net.feed_forward(test_data[:1000])
+    ## LOGIC dataset
     else:
         data = Logic()
         ## create test data
-        logic_and_test  = np.array(data.logic_and)
-        logic_or_test   = np.array(data.logic_or)
-        logic_exor_test = np.array(data.logic_exor)
+        logic_and_test  = np.array([(x, np.argmax(y)) for x, y in data.logic_and])
+        logic_or_test  = np.array([(x, np.argmax(y)) for x, y in data.logic_or])
+        logic_exor_test  = np.array([(x, np.argmax(y)) for x, y in data.logic_exor])
 
         #train_data = data.logic_or
         #test_data  = logic_or_test
@@ -54,7 +56,7 @@ if __name__ == '__main__':
 
         net = network.Network([2,3,2])
         if True:
-            net.train(train_data, epoch=300, mini_batch_size=2, learning_rate=0.5)
+            net.train(train_data, epoch=200, mini_batch_size=1, learning_rate=0.5, error_log=True)
             #net.save_parameter()
         else:
             net.load_parameter()

@@ -26,15 +26,16 @@ class Network():
 
     def __del__(self):
         if self.Errors:
-            data = np.array(self.Errors).reshape((1, -1))
-            abs_vec = np.vectorize(lambda x: abs(x))
-            data = abs_vec(data)
+            data = np.array(self.Errors)
+            #abs_vec = np.vectorize(lambda x: abs(x))
+            #data = abs_vec(data)
             np.savetxt('errors.csv', data, delimiter=',')
 
-    def train(self, training_data, epoch=10, mini_batch_size=2, learning_rate=0.5):
+    def train(self, training_data, epoch=10, mini_batch_size=2, learning_rate=0.5, error_log=False):
         """
         training for network parameter with training data
         """
+        self.Error_log=error_log
         for count in xrange(epoch):
             mini_batches = np.random.shuffle(training_data)
             ## split traing sample for mini_batches
@@ -55,32 +56,34 @@ class Network():
         for x, y in mini_batch:
             X.append(x)
             D.append(y)
-        Z.append(np.array(X).ravel().reshape((-1, N)))
-        U.append(Z[-1])
+        X = np.array(X).ravel().reshape((self.layer[0], N))
+        Z.append(X)
+        U.append(X)
         for l, w, b in zip(xrange(self.layers), self.w, self.b):
             U.append(np.dot(w, Z[l]) + np.dot(b, np.ones((1, N))))
             Z.append(sigmoid_vec(U[-1]))
         Y.append(Z[-1])
-        Y = np.array(Y).reshape((-1, N))
-        D = np.array(D).reshape((-1, N))
+        Y = np.array(Y).reshape((self.layer[-1], N))
+        D = np.array(D).reshape((self.layer[-1], N))
 
         ## Back propagation
         ## calculate delta
         Delta = [0] * self.layers
         Delta[-1] = Y - D
-        #self.Errors.append(Delta[-1])
-        for l in xrange(self.layers - 2, 0, -1):
-            active = sigmoid_prime_vec(U[l])
-            buf = np.dot(self.w[l].transpose(), Delta[l + 1])
-            Delta[l] = np.multiply(active, buf)
+        if self.Error_log:
+            self.Errors.append(sum(Y - D))
+        for l in xrange(2, self.layers):
+            active = sigmoid_prime_vec(U[-l])
+            buf = np.dot(self.w[-l+1].transpose(), Delta[-l+1])
+            Delta[-l] = np.multiply(active, buf)
         
         for l, w in zip(xrange(1, self.layers), self.w):
-            dw = np.dot(Ninv * Delta[l], Z[l - 1].transpose())
-            db = np.dot(Ninv * Delta[l], np.ones((N, 1)))
+            dw = Ninv * np.dot(Delta[l], Z[l-1].transpose())
+            db = Ninv * np.dot(Delta[l], np.ones((N, 1)))
             dw = dw * learning_rate * -1.0
             db = db * learning_rate * -1.0
-            self.w[l - 1] += dw
-            self.b[l - 1] += db
+            self.w[l-1] += dw
+            self.b[l-1] += db
 
     def feed_forward(self, data):
         count = 0
