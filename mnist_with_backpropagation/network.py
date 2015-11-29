@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import numpy as np
+import sys
 
 def sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
@@ -40,7 +41,7 @@ class Network():
             mini_batch = [training_data[x:x + mini_batch_size] for x in xrange(0, len(training_data), mini_batch_size)]
             for m in mini_batch:
                 self.update_mini_batch(m, learning_rate)
-            #print "Epoch [%d] done." % count
+            print "Epoch [%d] done." % count
 
     def update_mini_batch(self, mini_batch, learning_rate):
         N = len(mini_batch)
@@ -54,8 +55,8 @@ class Network():
         for x, y in mini_batch:
             X.append(x)
             D.append(y)
-        Z.append(np.array(X).transpose())
-        U.append(np.array(X).transpose())
+        Z.append(np.array(X).ravel().reshape((-1, N)))
+        U.append(Z[-1])
         for l, w, b in zip(xrange(self.layers), self.w, self.b):
             U.append(np.dot(w, Z[l]) + np.dot(b, np.ones((1, N))))
             Z.append(sigmoid_vec(U[-1]))
@@ -84,17 +85,12 @@ class Network():
     def feed_forward(self, data):
         count = 0
         for x, y in data:
-            print x,
-            print y,
             for w, b in zip(self.w, self.b):
-                x = sigmoid_vec(np.dot(w, x) + b.transpose()).transpose()
-            output = x
-            #output = np.argmax(x)
-            print output
-            if y == output:
+                x = sigmoid_vec(np.dot(w, x).reshape((-1, 1)) + b)
+            if y == np.argmax(x):
                 count += 1
         print "Test done."
-        print "[ %d / %d ]" % (count, len(data))
+        print "[ %d / %d ] : [%f%%]" % (count, len(data), float(count) / len(data) * 100)
 
     def save_parameter(self):
         path = "parameter/"

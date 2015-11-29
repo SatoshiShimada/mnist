@@ -2,13 +2,14 @@
 # coding: utf-8
 
 import numpy as np
+import sys
 
 import network
 
 class Logic():
-    logic_and = [[np.array([0,0]), np.array([0])], [np.array([0,1]), np.array([0])], [np.array([1,0]) ,np.array([0])], [np.array([1,1]), np.array([1])]]
-    logic_or = [[np.array([0,0]), np.array([0])], [np.array([0,1]), np.array([1])], [np.array([1,0]) ,np.array([1])], [np.array([1,1]), np.array([1])]]
-    logic_exor = [[np.array([0,0]), np.array([0])], [np.array([0,1]), np.array([1])], [np.array([1,0]) ,np.array([1])], [np.array([1,1]), np.array([0])]]
+    logic_and = [[np.array([0,0]), np.array([1, 0])], [np.array([0,1]), np.array([1, 0])], [np.array([1,0]) ,np.array([1, 0])], [np.array([1,1]), np.array([0, 1])]]
+    logic_or = [[np.array([0,0]), np.array([1, 0])], [np.array([0,1]), np.array([0, 1])], [np.array([1,0]) ,np.array([0, 1])], [np.array([1,1]), np.array([0, 1])]]
+    logic_exor = [[np.array([0,0]), np.array([1, 0])], [np.array([0,1]), np.array([0, 1])], [np.array([1,0]) ,np.array([0, 1])], [np.array([1,1]), np.array([1, 0])]]
 
 class MNIST():
     def __init__(self):
@@ -16,21 +17,26 @@ class MNIST():
         self.training_data, self.validation_data, self.test_data = loader.load_data_wrapper()
 
 if __name__ == '__main__':
-    is_mnist = False
+    is_mnist = True
 
     if is_mnist:
         mnist = MNIST()
         train_data = mnist.training_data
         test_data  = mnist.test_data
-        net = network.Network([784, 100, 10])
+        net = network.Network([784, 30, 10])
 
-        train_or_test = 'TEST'
-        #train_or_test = 'TRAIN'
+        try:
+            train_or_test = sys.argv[1]
+        except:
+            train_or_test = None
         if train_or_test == 'TRAIN':
-            net.train(train_data, epoch=10, mini_batch_size=10, learning_rate=3.0)
+            net.train(train_data, epoch=30, mini_batch_size=10, learning_rate=3.0)
             net.save_parameter()
         elif train_or_test == 'TEST':
             net.load_parameter()
+            net.feed_forward(test_data)
+        else:
+            net.train(train_data, epoch=30, mini_batch_size=10, learning_rate=3.0)
             net.feed_forward(test_data)
     else:
         data = Logic()
@@ -46,9 +52,9 @@ if __name__ == '__main__':
         train_data = data.logic_exor
         test_data  = logic_exor_test
 
-        net = network.Network([2,3,1])
+        net = network.Network([2,3,2])
         if True:
-            net.train(train_data, epoch=300, mini_batch_size=1, learning_rate=0.5)
+            net.train(train_data, epoch=300, mini_batch_size=2, learning_rate=0.5)
             #net.save_parameter()
         else:
             net.load_parameter()
