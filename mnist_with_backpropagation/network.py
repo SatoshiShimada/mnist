@@ -24,7 +24,6 @@ class Network():
         self.w = [np.random.randn(x, y) for x, y in zip(layers[1:], layers[:-1])]
         self.b = [np.random.randn(x, 1) for x in layers[1:]]
         self.Errors = []
-        self.prev_w, self.prev_b = 0, 0
 
     def __del__(self):
         if self.Errors:
@@ -85,16 +84,10 @@ class Network():
         for l, w in zip(xrange(1, self.layers), self.w):
             dw = Ninv * np.dot(Delta[l], Z[l-1].transpose())
             db = Ninv * np.dot(Delta[l], np.ones((N, 1)))
-            if True:
-                dw = (self.prev_w * rate) - learning_rate * (dw + rate2 * w)
-                db = (self.prev_b * rate) - (db * learning_rate * -1.0)
-            else:
-                dw = -1.0 * dw * learning_rate
-                db = -1.0 * db * learning_rate
+            dw = -1.0 * dw * learning_rate
+            db = -1.0 * db * learning_rate
             self.w[l-1] += dw
             self.b[l-1] += db
-            self.prev_dw = dw
-            self.prev_db = db
 
     def feed_forward(self, data):
         count = 0

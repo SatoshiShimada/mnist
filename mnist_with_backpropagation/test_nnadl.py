@@ -4,7 +4,7 @@
 import numpy as np
 import sys
 
-import network
+import network_nnadl as network
 
 class Logic():
     logic_and = [[np.array([0,0]), np.array([1, 0])], [np.array([0,1]), np.array([1, 0])], [np.array([1,0]) ,np.array([1, 0])], [np.array([1,1]), np.array([0, 1])]]
@@ -17,7 +17,7 @@ class MNIST():
         self.training_data, self.validation_data, self.test_data = loader.load_data_wrapper()
 
 if __name__ == '__main__':
-    is_mnist = False
+    is_mnist = True
 
     ## MNIST dataset
     if is_mnist:
@@ -26,22 +26,8 @@ if __name__ == '__main__':
         test_data  = mnist.test_data
         net = network.Network([784, 30, 10])
 
-        try:
-            train_or_test = sys.argv[1]
-        except:
-            train_or_test = None
-        if train_or_test == 'TRAIN':
-            net.train(train_data, epoch=30, mini_batch_size=10, learning_rate=3.0)
-            net.save_parameter()
-        elif train_or_test == 'TEST':
-            net.load_parameter()
-            net.feed_forward(test_data)
-        else:
-            net.train(train_data, epoch=1, mini_batch_size=10, learning_rate=3.0, error_log=True)
-            print 'test data'
-            net.feed_forward(test_data)
-            print 'training data'
-            net.feed_forward(mnist.validation_data)
+        #net.SGD(train_data, 30, 10, 3.0, test_data=test_data)
+        net.SGD(train_data, 1, 10, 3.0, test_data=test_data)
     ## LOGIC dataset
     else:
         data = Logic()
@@ -58,10 +44,5 @@ if __name__ == '__main__':
         test_data  = logic_exor_test
 
         net = network.Network([2,3,2])
-        if True:
-            net.train(train_data, epoch=200, mini_batch_size=1, learning_rate=0.5, error_log=True)
-            #net.save_parameter()
-        else:
-            net.load_parameter()
-        net.feed_forward(test_data)
+        net.SGD(train_data, 200, 1, 3.0, test_data=test_data)
 
