@@ -37,8 +37,9 @@ if __name__ == '__main__':
             net.load_parameter()
             net.feed_forward(test_data)
         else:
-            net.train(train_data[:1000], epoch=30, mini_batch_size=10, learning_rate=3.0, error_log=True)
-            net.feed_forward(test_data[:1000])
+            net.train(train_data[:100], epoch=30, mini_batch_size=10, learning_rate=2.0, error_log=True)
+            net.feed_forward(test_data[:100])
+            net.feed_forward(mnist.validation_data[:100])
     ## LOGIC dataset
     else:
         data = Logic()
@@ -56,7 +57,7 @@ if __name__ == '__main__':
 
         net = network.Network([2,3,2])
         if True:
-            net.train(train_data, epoch=200, mini_batch_size=1, learning_rate=0.5, error_log=True)
+            net.train(train_data, epoch=200, mini_batch_size=1, learning_rate=3.0, error_log=True)
             #net.save_parameter()
         else:
             net.load_parameter()
