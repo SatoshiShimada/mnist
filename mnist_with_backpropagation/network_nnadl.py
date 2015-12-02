@@ -65,8 +65,6 @@ class Network():
             spv = sigmoid_prime_vec(z)
             delta = np.dot(self.weights[-l+1].transpose(), delta) * spv
             nabla_b[-l] = delta
-            print delta.shape
-            print activations[-l-1].transpose().shape
             nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
         return (nabla_b, nabla_w)
 

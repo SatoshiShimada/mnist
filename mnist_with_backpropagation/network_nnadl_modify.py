@@ -61,12 +61,10 @@ class Network():
         Y = Z[-1]
 
         Delta = [np.zeros(w.shape) for w in self.weights]
-        #Delta[-1] = D - Y
-        Delta[-1] = Y - D
+        #Delta[-1] = self.cost_derivative(D, Y)
+        Delta[-1] = self.cost_derivative(Y, D)
         for x in xrange(1, self.num_layers - 1):
-            Delta[-x-1] = (
-                sigmoid_prime_vec(U[-x-1]) * np.dot(self.weights[-x].transpose(), Delta[-x])
-            )
+            Delta[-x-1] = sigmoid_prime_vec(U[-x-1]) * np.dot(self.weights[-x].transpose(), Delta[-x])
 
         for x in xrange(1, self.num_layers):
             dw = (1/N) * np.dot(Delta[x - 1], Z[x - 1].transpose())
@@ -76,48 +74,10 @@ class Network():
             self.weights[x - 1] += dw
             self.biases[x - 1] += db
 
-        #import sys
-        #sys.exit()
-
-    def backprop(self, x, y):
-        nabla_b = [np.zeros(b.shape) for b in self.biases]
-        nabla_w = [np.zeros(w.shape) for w in self.weights]
-
-        activation = x
-        activations = [x]
-        zs = []
-        for b, w in zip(self.biases, self.weights):
-            z = np.dot(w, activation)+b
-            zs.append(z)
-            activation = sigmoid_vec(z)
-            activations.append(activation)
-
-        delta = self.cost_derivative(activations[-1], y) * \
-                sigmoid_prime_vec(zs[-1])
-        nabla_b[-1] = delta
-        nabla_w[-1] = np.dot(delta, activations[-2].transpose())
-
-        for l in xrange(2, self.num_layers):
-            z = zs[-l]
-            spv = sigmoid_prime_vec(z)
-            delta = np.dot(self.weights[-l+1].transpose(), delta) * spv
-            nabla_b[-l] = delta
-            nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
-        return (nabla_b, nabla_w)
-
     def evaluate(self, test_data):
         test_results = [(np.argmax(self.feedforward(x)), y)
                for (x, y) in test_data]
         return sum(int(x == y) for (x, y) in test_results)
-        #for (x, y) in test_data:
-        #    if y != -1:
-        #        print "label: " + str(y),
-        #    x = x.reshape((784, 1))
-        #    a = np.argmax(self.feedforward(x))
-        #    print "result: " + str(a)
-        #    plt.imshow(x.reshape((28, 28)))
-        #    plt.gray()
-        #    plt.show()
 
     def cost_derivative(self, output_activations, y):
         return (output_activations-y)
