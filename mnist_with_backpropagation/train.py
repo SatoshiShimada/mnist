@@ -3,7 +3,6 @@
 
 import numpy as np
 import sys
-import copy
 
 import neural_network as network
 
@@ -20,7 +19,7 @@ def vectorize(x):
 if __name__ == '__main__':
     print 'network training'
     logic = Logic()
-    data = logic.logic_or
+    data = logic.logic_exor
 
     training_data = [(np.array(x), vectorize(y)) for x, y in data]
     test_data     = [(np.array(x), y) for x, y in data]

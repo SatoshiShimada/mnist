@@ -11,6 +11,10 @@ class Neural_Network(object):
         self.layer = layers
         self.weights = [np.random.randn(x, y) for x, y in zip(layers[1:], layers[:-1])]
         self.biases  = [np.random.randn(x, 1) for x in layers[1:]]
+        self.test_data = None
+
+    def set_test(self, test_data):
+        self.test_data = test_data
 
     def feed_forward(self, data):
         count = 0
@@ -20,9 +24,6 @@ class Neural_Network(object):
                 a = sigmoid_vec(np.dot(w, a) + b)
             if np.argmax(a) == y:
                 count += 1
-            #print x
-            #print np.argmax(a),
-            #print np.argmax(y)
         print "Result: [{0:d} / {1:d}] ({2:f}%)".format(count, len(data), 100.0 * count / len(data))
 
     def train(self, training_data, epochs, mini_batch_size, learning_rate):
@@ -31,6 +32,8 @@ class Neural_Network(object):
             mini_batches = [training_data[x: x+mini_batch_size] for x in xrange(0, len(training_data), mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, learning_rate)
+            if self.test_data:
+                self.feed_forward(self.test_data)
 
     def update_mini_batch(self, mini_batch, learning_rate):
         N = len(mini_batch)
@@ -69,6 +72,24 @@ class Neural_Network(object):
             delta_b = -1.0 * learning_rate * db
             self.weights[l-1] += delta_w
             self.biases[l-1] += delta_b
+
+    def save_parameter(self):
+        path = 'parameter/'
+        count = 0
+        for w, b in zip(self.weights, self.biases):
+            filename_w = "{0}weights{1:0>3}.csv".format(path, count)
+            filename_b = "{0}biases{1:0>3}.csv".format(path, count)
+            np.savetxt(filename_w, w, delimiter=',')
+            np.savetxt(filename_b, b, delimiter=',')
+            count += 1
+
+    def load_parameter(self):
+        path = 'parameter/'
+        for count, n in zip(xrange(self.num_layers - 1), self.layer[1:]):
+            filename_w = "{0}weights{1:0>3}.csv".format(path, count)
+            filename_b = "{0}biases{1:0>3}.csv".format(path, count)
+            self.weights[count] = np.loadtxt(filename_w, delimiter=',')
+            self.biases[count] = np.loadtxt(filename_b, delimiter=',').reshape((-1, 1))
 
 def sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
