@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     epochs = 1
     mini_batch_size = 1
-    learning_rate = 2.0
+    learning_rate = 0.2
 
     net = network.Neural_Network([784, 30, 10])
     net.set_test(test_data)
