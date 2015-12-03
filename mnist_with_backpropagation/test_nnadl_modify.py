@@ -5,7 +5,6 @@ import numpy as np
 import sys
 
 import network_nnadl_modify as network
-#import network_nnadl as network
 
 class Logic():
     logic_and  = [[[0, 0], 0], [[0, 1], 0], [[1, 0], 0], [[1, 1], 1]]
