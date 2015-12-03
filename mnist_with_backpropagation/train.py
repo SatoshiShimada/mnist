@@ -23,7 +23,7 @@ if __name__ == '__main__':
     data = logic.logic_or
 
     training_data = [(np.array(x), vectorize(y)) for x, y in data]
-    test_data = copy.deepcopy(training_data)
+    test_data     = [(np.array(x), y) for x, y in data]
 
     epochs = 300
     mini_batch_size = 1

@@ -13,13 +13,17 @@ class Neural_Network(object):
         self.biases  = [np.random.randn(x, 1) for x in layers[1:]]
 
     def feed_forward(self, data):
+        count = 0
         for x, y in data:
-            a = x.reshape((2, 1))
+            a = x.reshape((self.layer[0], 1))
             for w, b in zip(self.weights, self.biases):
                 a = sigmoid_vec(np.dot(w, a) + b)
-            print x
-            print np.argmax(a),
-            print np.argmax(y)
+            if np.argmax(a) == y:
+                count += 1
+            #print x
+            #print np.argmax(a),
+            #print np.argmax(y)
+        print "Result: [{0:d} / {1:d}] ({2:f}%)".format(count, len(data), 100.0 * count / len(data))
 
     def train(self, training_data, epochs, mini_batch_size, learning_rate):
         for count in xrange(epochs):
