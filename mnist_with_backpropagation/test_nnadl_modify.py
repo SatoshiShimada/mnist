@@ -32,18 +32,18 @@ if __name__ == '__main__':
         test_data  = mnist.test_data
         net = network.Network([784, 30, 10])
 
-        #net.SGD(train_data, 30, 10, 3.0, test_data=test_data)
-        net.SGD(train_data, 1, 10, 1.5, test_data=test_data)
+        net.SGD(train_data, 30, 10, 3.0, test_data=test_data)
+        #net.SGD(train_data, 1, 10, 2.0, test_data=test_data)
     ## LOGIC dataset
     else:
         data = Logic()
         ## create test data
-        buf = data.logic_and
-        #buf = data.logic_or
+        #buf = data.logic_and
+        buf = data.logic_or
         #buf = data.logic_exor
         train_data = [[np.array(x).reshape((2, 1)), vectorized(y)] for x, y in buf]
         test_data = [[np.array(x).reshape((2, 1)), y] for x, y in buf]
 
         net = network.Network([2,3,2])
-        net.SGD(train_data, 300, 1, 0.5, test_data=test_data)
+        net.SGD(train_data, 500, 1, 0.5, test_data=test_data)
 

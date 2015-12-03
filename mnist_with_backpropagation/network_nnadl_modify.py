@@ -1,7 +1,6 @@
 
 import random
 import numpy as np
-import matplotlib.pyplot as plt
 
 class Network():
     def __init__(self, sizes):
@@ -32,47 +31,35 @@ class Network():
 
     def update_mini_batch(self, mini_batch, learning_rate):
         N = len(mini_batch)
-        #nabla_b = [np.zeros(b.shape) for b in self.biases]
-        #nabla_w = [np.zeros(w.shape) for w in self.weights]
-        #######
-        ## X ##
-        ## D ##
-        #######
+
+        ## create matrix from mini_batches
         X = []
         D = []
         for x, y in mini_batch:
             X.append(x)
             D.append(y)
-        X = np.array(X).reshape((self.sizes[0], N)) # 784: number of neuron of input layer
-        D = np.array(D).reshape((self.sizes[-1], N)) # 10: number of neuron of output layer
+        X = np.array(X).reshape((self.sizes[0], N))
+        D = np.array(D).reshape((self.sizes[-1], N))
 
-        #######
-        ## U ##
-        ## Z ##
-        #######
+        ## feed forward
         U = [X]
         Z = [X]
         for x in xrange(1, self.num_layers):
             U.append(np.dot(self.weights[x - 1], Z[x - 1]) + np.dot(self.biases[x - 1], np.ones((1, N))))
             Z.append(sigmoid_vec(U[-1]))
-        #######
-        ## Y ##
-        #######
-        Y = Z[-1]
+        Y = Z[-1] # output of network is activation of last layer
 
+        ## back propagation
         Delta = [np.zeros(w.shape) for w in self.weights]
-        #Delta[-1] = self.cost_derivative(D, Y)
-        Delta[-1] = self.cost_derivative(Y, D)
+        Delta[-1] = (Y - D) * sigmoid_prime_vec(U[-1])
         for x in xrange(1, self.num_layers - 1):
             Delta[-x-1] = sigmoid_prime_vec(U[-x-1]) * np.dot(self.weights[-x].transpose(), Delta[-x])
 
         for x in xrange(1, self.num_layers):
-            dw = (1/N) * np.dot(Delta[x - 1], Z[x - 1].transpose())
-            db = (1/N) * np.dot(Delta[x - 1], np.ones((N, 1)))
-            dw = learning_rate * dw * (-1.0)
-            db = learning_rate * db * (-1.0)
-            self.weights[x - 1] += dw
-            self.biases[x - 1] += db
+            dw = (learning_rate/N) * np.dot(Delta[-x], Z[-x-1].transpose())
+            db = (learning_rate/N) * np.dot(Delta[-x], np.ones((N, 1)))
+            self.weights[-x] = self.weights[-x] - dw
+            self.biases[-x] = self.biases[-x] - db
 
     def evaluate(self, test_data):
         test_results = [(np.argmax(self.feedforward(x)), y)
