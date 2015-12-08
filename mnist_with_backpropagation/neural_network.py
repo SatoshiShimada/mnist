@@ -32,6 +32,7 @@ class Neural_Network(object):
             mini_batches = [training_data[x: x+mini_batch_size] for x in xrange(0, len(training_data), mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, learning_rate)
+            print 'Epoch {0:d} done'.format(count)
             if self.test_data:
                 self.feed_forward(self.test_data)
 
@@ -73,19 +74,15 @@ class Neural_Network(object):
             self.weights[l-1] += delta_w
             self.biases[l-1] += delta_b
 
-    def save_parameter(self):
-        path = 'parameter/'
-        count = 0
-        for w, b in zip(self.weights, self.biases):
+    def save_parameter(self, path = 'parameter/'):
+        for count in xrange(self.num_layers - 1):
             filename_w = "{0}weights{1:0>3}.csv".format(path, count)
             filename_b = "{0}biases{1:0>3}.csv".format(path, count)
-            np.savetxt(filename_w, w, delimiter=',')
-            np.savetxt(filename_b, b, delimiter=',')
-            count += 1
+            np.savetxt(filename_w, self.weights[count], delimiter=',')
+            np.savetxt(filename_b, self.biases[count], delimiter=',')
 
-    def load_parameter(self):
-        path = 'parameter/'
-        for count, n in zip(xrange(self.num_layers - 1), self.layer[1:]):
+    def load_parameter(self, path = 'parameter/'):
+        for count in xrange(self.num_layers - 1):
             filename_w = "{0}weights{1:0>3}.csv".format(path, count)
             filename_b = "{0}biases{1:0>3}.csv".format(path, count)
             self.weights[count] = np.loadtxt(filename_w, delimiter=',')
