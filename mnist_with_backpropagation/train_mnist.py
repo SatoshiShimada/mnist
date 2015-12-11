@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     training_data, validation_data, test_data = loader.load_data_wrapper()
 
-    epochs = 10
+    epochs = 100
     mini_batch_size = 1
     learning_rate = 0.01
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     if train:
         #net.load_parameter(path=datapath)
         net.load_parameter('parameter/init_params/')
-        net.train(training_data, epochs, mini_batch_size, learning_rate, momentum=False)
+        net.train(training_data, epochs, mini_batch_size, learning_rate)
         #net.save_parameter(path=datapath)
     else:
         net.load_parameter(path=datapath)
