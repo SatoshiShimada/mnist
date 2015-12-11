@@ -17,16 +17,18 @@ def vectorize(x):
 
 if __name__ == '__main__':
     print 'network training'
+    datapath = 'parameter/logic/or/'
     logic = Logic()
-    data = logic.logic_exor
+    data = logic.logic_or
 
     training_data = [(np.array(x), vectorize(y)) for x, y in data]
     test_data     = [(np.array(x), y) for x, y in data]
 
     epochs = 300
     mini_batch_size = 1
-    learning_rate = 1.0
+    learning_rate = 0.5
 
     net = network.Neural_Network([2, 3, 2])
     net.train(training_data, epochs, mini_batch_size, learning_rate)
+    net.save_parameter(datapath)
     net.feed_forward(test_data)
