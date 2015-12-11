@@ -31,6 +31,7 @@ void callPython(std::string filename, char *ret)
 
 	/* execute 'src/ball.py' with argument that is filename of image */
 	strcpy(command, "src/ball.py ");
+	//strcpy(command, "src/field.py ");
 	strcat(command, name);
 	fp = popen(command, "r");
 	/* get string of output of 'src/ball.py' */

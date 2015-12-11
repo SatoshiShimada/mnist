@@ -97,6 +97,7 @@ void Interface::dropEvent(QDropEvent *e)
 	char dimension[1024], value[1024];
 
 	/* split result to dimension and value */
+	std::cout << buf << std::endl;
 	int j = 0;
 	for(int i = 0; buf[i] != '\0'; i++) {
 		if(buf[i] == ',') {
@@ -112,6 +113,18 @@ void Interface::dropEvent(QDropEvent *e)
 	} else {
 		resultLine->setText(dimension);
 	}
+	/*
+	if(!strcmp(dimension, "0"))
+		resultLine->setText("No ball");
+	else if(!strcmp(dimension, "1"))
+		resultLine->setText("Ball exist!");
+	else if(!strcmp(dimension, "2"))
+		resultLine->setText("Middle");
+	else if(!strcmp(dimension, "3"))
+		resultLine->setText("Far");
+	else
+		resultLine->setText("Unknown");
 	valueLine->setText(value);
+	*/
 }
 

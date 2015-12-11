@@ -10,11 +10,11 @@ import read
 
 def evaluate_from_file(filename):
     ## read mnist data
-    training_data, validation_data, test_data = \
-        mnist_loader_with_pickle.load_data_wrapper()
+    #training_data, validation_data, test_data = \
+    #    mnist_loader_with_pickle.load_data_wrapper()
     ## load training data of ball from image
-    ball_data = read.load_ball()
-    training_data = training_data + ball_data
+    #ball_data = read.load_ball()
+    #training_data = training_data + ball_data
 
     ###########################################
     ## create network                        ##
@@ -22,8 +22,7 @@ def evaluate_from_file(filename):
     ## hidden layer: 30 * 1                  ##
     ## output layer: 11 (digits and ball)    ##
     ###########################################
-    #net = network.Network([784, 30, 11])
-    net = network.Network([784, 100, 10])
+    net = network.Network([320 * 240, 30, 2])
 
     ## execute training
     #net.SGD(training_data, 30, 10, 3.0, test_data=test_data)

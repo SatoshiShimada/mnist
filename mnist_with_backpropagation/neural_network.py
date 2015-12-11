@@ -26,7 +26,8 @@ class Neural_Network(object):
                 count += 1
         print "Result: [{0:d} / {1:d}] ({2:f}%)".format(count, len(data), 100.0 * count / len(data))
 
-    def train(self, training_data, epochs, mini_batch_size, learning_rate):
+    def train(self, training_data, epochs, mini_batch_size, learning_rate, momentum=True):
+        self.momentum = momentum
         for count in xrange(epochs):
             random.shuffle(training_data)
             mini_batches = [training_data[x: x+mini_batch_size] for x in xrange(0, len(training_data), mini_batch_size)]
@@ -65,14 +66,26 @@ class Neural_Network(object):
         for l in xrange(2, self.num_layers):
             Delta[-l] = sigmoid_prime_vec(U[-l]) * np.dot(self.weights[-l+1].transpose(), Delta[-l+1])
         
+        prev_delta_w = [np.zeros((x, y)) for x, y in zip(self.layer[1:], self.layer[:-1])]
+        prev_delta_b = [np.zeros((x, 1)) for x in self.layer[1:]]
+        alpha = 0.5
+        lambda_ = 0.00001
         for l in xrange(1, self.num_layers):
             dw = (1/N) * np.dot(Delta[l - 1], Z[l - 1].transpose())
             db = (1/N) * np.dot(Delta[l - 1], np.ones((N, 1)))
 
-            delta_w = -1.0 * learning_rate * dw
-            delta_b = -1.0 * learning_rate * db
+            if self.momentum:
+                delta_w = -1.0 * learning_rate * dw + alpha * prev_delta_w[l-1]
+                delta_b = -1.0 * learning_rate * db + alpha * prev_delta_b[l-1]
+            else:
+                delta_w = -1.0 * learning_rate * (dw + lambda_ * self.weights[l-1])
+                delta_b = -1.0 * learning_rate * db
             self.weights[l-1] += delta_w
             self.biases[l-1] += delta_b
+
+            # for momentum
+            prev_delta_w.append(delta_w)
+            prev_delta_b.append(delta_b)
 
     def save_parameter(self, path = 'parameter/'):
         for count in xrange(self.num_layers - 1):

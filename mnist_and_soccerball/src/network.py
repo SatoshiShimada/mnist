@@ -74,7 +74,7 @@ class Network():
         return sum(int(x == y) for (x, y) in test_results)
 
     def evaluate_data(self, test_data):
-        data = test_data[0].reshape((784, 1))
+        data = test_data[0].reshape((self.sizes[0], 1))
         result = self.feedforward(data)
         index  = np.argmax(result)
         value  = result[index]
@@ -84,7 +84,8 @@ class Network():
         return (output_activations-y)
 
     def save_data(self):
-        path = 'parameters/with_ball/'
+        #path = 'parameters/with_ball/'
+        path = '../76800_30_4/'
         ## np.save(path + 'weights.npy', self.weights)
         np.savetxt(path + 'biases1.csv', self.biases[0], delimiter=',')
         np.savetxt(path + 'weights1.csv', self.weights[0], delimiter=',')
@@ -92,13 +93,15 @@ class Network():
         np.savetxt(path + 'weights2.csv', self.weights[1], delimiter=',')
 
     def load_data(self):
-        path = 'parameters/with_ball/'
-        self.biases[0] = np.loadtxt(path + 'biases1.csv', delimiter=',')
+        #path = 'parameters/with_ball/'
+        #path = '../76800_30_2/'
+        path = 'parameters/mnist_best/'
+        self.biases[0] = np.loadtxt(path + 'biases000.csv', delimiter=',')
         self.biases[0] = self.biases[0].reshape((self.sizes[1], 1))
-        self.weights[0] = np.loadtxt(path + 'weights1.csv', delimiter=',')
-        self.biases[1] = np.loadtxt(path + 'biases2.csv', delimiter=',')
+        self.weights[0] = np.loadtxt(path + 'weights000.csv', delimiter=',')
+        self.biases[1] = np.loadtxt(path + 'biases001.csv', delimiter=',')
         self.biases[1] = self.biases[1].reshape((self.sizes[2], 1))
-        self.weights[1] = np.loadtxt(path + 'weights2.csv', delimiter=',')
+        self.weights[1] = np.loadtxt(path + 'weights001.csv', delimiter=',')
 
 def sigmoid(z):
     return 1.0/(1.0+np.exp(-z))

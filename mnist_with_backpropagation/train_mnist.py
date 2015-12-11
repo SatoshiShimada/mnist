@@ -8,22 +8,23 @@ import mnist_loader_with_pickle as loader
 
 if __name__ == '__main__':
     print 'network training'
-    datapath = 'parameter/mnist_best/'
+    datapath = 'parameter/momentum_before/'
 
     training_data, validation_data, test_data = loader.load_data_wrapper()
 
-    epochs = 1
+    epochs = 10
     mini_batch_size = 1
     learning_rate = 0.01
 
     net = network.Neural_Network([784, 30, 10])
     net.set_test(test_data)
-    #train = True
-    train = False
+    train = True
+    #train = False
     if train:
-        net.load_parameter(path=datapath)
-        net.train(training_data, epochs, mini_batch_size, learning_rate)
-        net.save_parameter(path=datapath)
+        #net.load_parameter(path=datapath)
+        net.load_parameter('parameter/init_params/')
+        net.train(training_data, epochs, mini_batch_size, learning_rate, momentum=False)
+        #net.save_parameter(path=datapath)
     else:
         net.load_parameter(path=datapath)
         net.feed_forward(test_data)
