@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     training_data, validation_data, test_data = loader.load_data_wrapper()
 
-    epochs = 100
+    epochs = 30
     mini_batch_size = 1
     learning_rate = 0.01
 

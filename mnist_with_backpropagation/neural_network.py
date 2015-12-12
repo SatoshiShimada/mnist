@@ -12,7 +12,7 @@ class Neural_Network(object):
         self.weights = [np.random.randn(x, y) for x, y in zip(layers[1:], layers[:-1])]
         self.biases  = [np.random.randn(x, 1) for x in layers[1:]]
         self.test_data = None
-        self.p = [0.9 for x in xrange(self.num_layers)]
+        self.p = [0.9 for x in xrange(self.num_layers)] # The rate of dropout for some layers
 
     def set_test(self, test_data):
         self.test_data = test_data
@@ -28,7 +28,9 @@ class Neural_Network(object):
                 count += 1
         print "Result: [{0:d} / {1:d}] ({2:f}%)".format(count, len(data), 100.0 * count / len(data))
 
-    def train(self, training_data, epochs, mini_batch_size, learning_rate):
+    def train(self, training_data, epochs, mini_batch_size, learning_rate, alpha=0.5, lambda_=0.0001):
+        self.alpha = alpha
+        self.lambda_ = lambda_
         for count in xrange(epochs):
             random.shuffle(training_data)
             mini_batches = [training_data[x: x+mini_batch_size] for x in xrange(0, len(training_data), mini_batch_size)]
@@ -79,15 +81,13 @@ class Neural_Network(object):
         
         prev_delta_w = [np.zeros((x, y)) for x, y in zip(self.layer[1:], self.layer[:-1])]
         prev_delta_b = [np.zeros((x, 1)) for x in self.layer[1:]]
-        alpha = 0.5
-        lambda_ = 0.0001
         for l in xrange(1, self.num_layers):
             dw = (1/N) * np.dot(Delta[l-1], Z[l-1].transpose())
             db = (1/N) * np.dot(Delta[l-1], np.ones((N, 1)))
 
-            #delta_w = -1.0 * learning_rate * (dw + lambda_ * self.weights[l-1]) + alpha * prev_delta_w[l-1]
-            delta_w = -1.0 * learning_rate * (dw + lambda_ * dropout_weight[l-1]) + alpha * prev_delta_w[l-1]
-            delta_b = -1.0 * learning_rate * db + alpha * prev_delta_b[l-1]
+            #delta_w = -1.0 * learning_rate * (dw + self.lambda_ * self.weights[l-1]) + self.alpha * prev_delta_w[l-1]
+            delta_w = -1.0 * learning_rate * (dw + self.lambda_ * dropout_weight[l-1]) + self.alpha * prev_delta_w[l-1]
+            delta_b = -1.0 * learning_rate * db + self.alpha * prev_delta_b[l-1]
             self.weights[l-1] += delta_w
             self.biases[l-1] += delta_b
 
