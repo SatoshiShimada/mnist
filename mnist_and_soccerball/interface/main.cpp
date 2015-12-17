@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 	QApplication app(argc, argv);
 	Interface *interface = new Interface;
 	/* set window size */
-	interface->resize(600, 350);
+	//interface->resize(600, 350);
 
 	interface->show();
 	return app.exec();

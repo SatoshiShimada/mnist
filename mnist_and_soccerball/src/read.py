@@ -8,6 +8,7 @@ import mnist_loader_with_pickle as loader
 
 def load_image_rgb(filename, label):
     img = Image.open(filename)
+    img = img.resize((28, 28))
 
     data = []
     width, height = img.size

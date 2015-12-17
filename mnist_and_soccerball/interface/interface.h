@@ -5,7 +5,6 @@
 #include <QApplication>
 #include <QPushButton>
 #include <QLabel>
-#include <QHBoxLayout>
 #include <QTextEdit> /* multi line */
 #include <QLineEdit> /* single line */
 #include <QMainWindow>
@@ -15,23 +14,31 @@
 #include <QMimeData>
 #include <QString>
 
+#include "paint.h"
+
 class Interface : public QMainWindow
 {
 	Q_OBJECT
 
 private:
+	PaintArea *paintarea;
+	QString filenameDrag;
 	QWidget *window;
 	QLabel *titleLabel;
 	QLabel *image;
 	QLabel *filenameLabel;
 	QLabel *resultLabel, *valueLabel;
-	QVBoxLayout *mainLayout;
-	QVBoxLayout *labelLayout;
-	QVBoxLayout *inputLayout;
-	QHBoxLayout *winLayout;
+	QLabel *penWidthLabel;
+	QPushButton *clearButton;
+	QPushButton *saveButton;
+	QPushButton *evaluateButton;
 	QLineEdit *filenameLine;
 	QLineEdit *resultLine, *valueLine;
-	QString filenameDrag;
+	QSlider *penWidthSlider;
+	QVBoxLayout *mainLayout;
+	QGridLayout *labelLayout;
+	QHBoxLayout *winLayout;
+	void connection(void);
 
 public:
 	Interface();
@@ -41,4 +48,11 @@ public:
 	void loadImage(QString);
 	void dragEnterEvent(QDragEnterEvent *e);
 	void dropEvent(QDropEvent *e);
+
+private slots:
+	void clearImage(void);
+	void saveImage(void);
+	void evaluateImage(void);
+	void penWidthChanged(void);
 };
+
