@@ -6,13 +6,20 @@ import random
 import sys
 
 class Neural_Network(object):
-    def __init__(self, layers):
+    def __init__(self, layers, dropout=None):
         self.num_layers = len(layers)
         self.layer = layers
         self.weights = [np.random.randn(x, y) for x, y in zip(layers[1:], layers[:-1])]
         self.biases  = [np.random.randn(x, 1) for x in layers[1:]]
         self.test_data = None
-        self.p = [0.9 for x in xrange(self.num_layers)] # The rate of dropout for some layers
+        self.validation_data = None
+        if dropout: # The rate of dropout for some layers
+            self.p = dropout
+        else:
+            self.p = [1 for x in xrange(self.num_layers)]
+
+    def set_validation(self, validation_data):
+        self.validation_data = validation_data
 
     def set_test(self, test_data):
         self.test_data = test_data
@@ -38,7 +45,11 @@ class Neural_Network(object):
                 self.update_mini_batch(mini_batch, learning_rate)
             print 'Epoch {0:d} done'.format(count)
             if self.test_data:
+                print "Test: ",
                 self.feed_forward(self.test_data)
+            if self.validation_data:
+                print "Validation: ",
+                self.feed_forward(self.validation_data)
 
     def update_mini_batch(self, mini_batch, learning_rate):
         N = len(mini_batch)
