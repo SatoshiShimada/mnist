@@ -30,7 +30,7 @@ void Interface::createWindow(void)
 	penWidthLabel  = new QLabel("Pen width: ");
 	clearButton    = new QPushButton("Clear");
 	saveButton     = new QPushButton("Save");
-	evaluateButton = new QPushButton("Evalulate");
+	evaluateButton = new QPushButton("Evaluate");
 	filenameLine   = new QLineEdit;
 	resultLine     = new QLineEdit;
 	valueLine      = new QLineEdit;
