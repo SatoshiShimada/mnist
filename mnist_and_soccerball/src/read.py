@@ -1,5 +1,6 @@
 
 import numpy as np
+import sys
 try:
     import Image
 except:
@@ -7,7 +8,11 @@ except:
 import mnist_loader_with_pickle as loader
 
 def load_image_rgb(filename, label):
-    img = Image.open(filename)
+    try:
+        img = Image.open(filename)
+    except:
+        return None
+        #sys.exit()
     img = img.resize((28, 28))
 
     data = []
