@@ -10,11 +10,11 @@ import read
 
 def evaluate_from_file(filename):
     ## read mnist data
-    training_data, validation_data, test_data = \
-        mnist_loader_with_pickle.load_data_wrapper()
+    #training_data, validation_data, test_data = \
+    #    mnist_loader_with_pickle.load_data_wrapper()
     ## load training data of ball from image
-    ball_data = read.load_ball()
-    training_data = training_data + ball_data
+    #ball_data = read.load_ball()
+    #training_data = training_data + ball_data
 
     ###########################################
     ## create network                        ##
